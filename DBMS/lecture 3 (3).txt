@@ -1,0 +1,17 @@
+CREATE TABLE SourceProd (Pid NUMBER, PName VARCHAR(10), PPrice NUMBER);
+
+CREATE TABLE TargetProd (Pid NUMBER, PName VARCHAR(10), PPrice NUMBER);
+
+INSERT INTO SourceProd VALUES (101, 'Tea', 10);
+INSERT INTO SourceProd VALUES (102, 'Coffee', 20);
+INSERT INTO SourceProd VALUES (103, 'Biscuit', 15);
+
+INSERT INTO TargetProd VALUES (101, 'Tea', 10);
+INSERT INTO TargetProd VALUES (102, 'Coffee', 25);
+INSERT INTO TargetProd VALUES (103, 'Biscuit', 12);
+INSERT INTO TargetProd VALUES (104, 'Water', 15);
+
+MERGE TargetProd TG
+USING SourceProd SC
+ON (TG.Pid=SC.Pid)
+WHEN 

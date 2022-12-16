@@ -1,0 +1,19 @@
+CREATE TABLE Employee(
+eid NUMBER,
+name VARCHAR(20),
+hiredate DATE DEFAULT to_date('2020-12-13','yyyy-mm-dd'),
+entrydate DATE,
+salary NUMBER,
+bonus NUMBER GENERATED ALWAYS AS (salary*0.1) VIRTUAL
+);
+
+INSERT INTO Employee(eid, name, hiredate, entrydate, salary) VALUES(101, 'Vishal', DEFAULT, CURRENT_DATE, 10000);
+INSERT INTO Employee(eid, name, hiredate, entrydate, salary) VALUES(102, 'ABC', DEFAULT, CURRENT_DATE, 20000);
+INSERT INTO Employee(eid, name, hiredate, entrydate, salary) VALUES(103, 'XYZ', DEFAULT, CURRENT_DATE, null);
+
+SELECT * FROM Employee;
+
+SELECT AVG(salary) FROM Employee;
+SELECT AVG(NVL(salary,0)) FROM Employee;
+
+drop table Employee;

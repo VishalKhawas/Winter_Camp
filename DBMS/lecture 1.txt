@@ -1,0 +1,35 @@
+CREATE TABLE Employee(
+eid NUMBER,
+name VARCHAR(10),
+address varchar(20),
+salary NUMBER,
+hiredate DATE
+);
+
+ALTER TABLE Employee ADD phone NUMBER;
+
+DESCRIBE Employee;
+
+INSERT INTO Employee VALUES(
+101, 'Vishal', 'Bokaro', 100000, to_date('2023-10-10', 'yyyy-mm-dd'), 1234567890
+);
+
+SELECT * FROM Employee;
+
+DROP TABLE Employee;
+
+UPDATE Employee SET phone=1234567890 WHERE name='Vishal';
+
+DELETE FROM Employee WHERE eid=101;
+
+ALTER TABLE Employee ADD CONSTRAINT eid PRIMARY KEY (eid);
+
+ALTER TABLE Employee MODIFY name VARCHAR(30) NOT NULL;
+
+TRUNCATE TABLE Employee;
+
+CREATE TABLE Dept(
+dept_id NUMBER PRIMARY KEY,
+dept_name VARCHAR(10),
+manager NUMBER FOREIGN KEY REFERENCES Employee (eid)
+);

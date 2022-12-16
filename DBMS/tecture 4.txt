@@ -1,0 +1,70 @@
+-- having savg as a row in table
+
+-- CREATE TABLE Items(item_id NUMBER, name VARCHAR(10), price NUMBER, savg NUMBER);
+
+-- INSERT INTO Items(item_id, name, price) VALUES(101, 'A', 100);
+-- INSERT INTO Items(item_id, name, price) VALUES(102, 'B', 200);
+-- INSERT INTO Items(item_id, name, price) VALUES(103, 'C', 150);
+-- INSERT INTO Items(item_id, name, price) VALUES(104, 'D', 120);
+
+-- UPDATE Items SET savg = (SELECT avg(price) FROM Items);
+
+-- SELECT * FROM Items;
+
+-- DROP TABLE Items;
+
+
+
+-- without having savg as column in table
+
+CREATE TABLE Items(item_id NUMBER, name VARCHAR(10), price NUMBER);
+
+INSERT INTO Items(item_id, name, price) VALUES(101, 'A', 100);
+INSERT INTO Items(item_id, name, price) VALUES(102, 'B', 200);
+INSERT INTO Items(item_id, name, price) VALUES(103, 'C', 150);
+INSERT INTO Items(item_id, name, price) VALUES(104, 'D', 120);
+INSERT INTO Items(item_id, name, price) VALUES(105, 'B', 100);
+INSERT INTO Items(item_id, name, price) VALUES(106, 'B', 150);
+
+-- below function has two table calls, hence overhead....can be solved by analytical function
+SELECT i1.item_id, i1.name, i1.price, savg.av FROM Items i1,
+(SELECT avg(price) AS av FROM Items) savg;
+
+--using analytical function
+SELECT i1.item_id, i1.name, i1.price, avg(price) over() AS savg FROM Items i1;
+
+-- group wise average i.e. B walon ka alag aise kr k
+SELECT i1.item_id, i1.name, i1.price, savg.av FROM Items i1,
+(SELECT name, avg(price) AS av FROM Items GROUP BY name) savg
+WHERE i1.name=savg.name;
+
+-- same as above using analytical function
+SELECT i1.item_id, i1.name, i1.price, avg(price) over(PARTITION BY name) AS savg FROM Items i1;
+
+-- if we truncate date it gives first date of current month
+SELECT TRUNC(SYSDATE, 'month') FROM DUAL;
+
+-- below does partition on 2 basis, 1st on basis of date and another on basis of month as trunc gives 1st day of month
+-- date not abailable right now in table, insert and run
+SELECT i1.item_id, i1.date1, avg(price) over(PARTITION BY date1) as savg,
+avg(price) over(PARTITION BY trunc(date1, 'mon')) AS savgm FROM Items i1;
+
+-- 2 row chhor chhor ke chalega 2 rows 
+SELECT * FROM Items ORDER BY price OFFSET 1 ROWS FETCH NEXT 2 ROWS ONLY;
+
+--row number is a temp value of the output result
+SELECT ROW_NUMBER() OVER(PARTITION BY price ORDER BY item_id) FROM Items;
+
+--price is how much % of total amount using function ratio to percent
+SELECT trunc(order_date, 'mon') AS sales_month,
+SUM(price) as sum1, ROUND(ratio_to_report(sum(price))
+over()*100,2) as q from Items
+GROUP BY trunc(order_date, 'mon');
+
+--rank analytical function, isme order by price then the rank of its price is returned, basicall it tells how many itmes has price less than 150, -1
+SELECT rank(150) WITHIN GROUP(ORDER BY price) AS row_rank FROM Items;
+
+-- name wise rank
+SELECT item_id, name, price, rank() OVER (PARTITION BY name ORDER BY price) AS itemrank FROM Items;
+
+SELECT * FROM Items;

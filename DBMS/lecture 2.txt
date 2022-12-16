@@ -1,0 +1,55 @@
+drop table Employee;
+drop table Dept;
+
+
+CREATE TABLE Employee( 
+eid NUMBER, 
+name VARCHAR(10), 
+address varchar(20), 
+salary NUMBER, 
+hiredate DATE 
+)
+
+INSERT INTO Employee VALUES( 
+101, 'Vishal', 'Bokaro', 100000, to_date('2023-10-10', 'yyyy-mm-dd') 
+)
+
+INSERT INTO Employee VALUES( 
+102, 'XyZ', 'Bokaro', 100000, to_date('2023-10-10', 'yyyy-mm-dd') 
+)
+
+INSERT INTO Employee VALUES( 
+103, 'ZBC', 'Bokaro', 100000, to_date('2023-10-10', 'yyyy-mm-dd') 
+)
+
+INSERT INTO Employee VALUES( 
+104, 'ABC', 'Bokaro', 100000, to_date('2023-10-10', 'yyyy-mm-dd') 
+)
+
+SELECT name FROM Employee WHERE NOT REGEXP_LIKE (name, '[AEIOU]$', 'i');
+SELECT name FROM Employee WHERE NOT REGEXP_LIKE (name, '^[AEIOU]', 'i');
+
+SELECT name FROM Employee WHERE NOT REGEXP_LIKE (name, '^[AEIOU]', 'i') AND NOT REGEXP_LIKE (name, '[AEIOU]$', 'i');
+
+-- SELECT name FROM Employee WHERE LEFT (name,1) NOT IN ('A','E','I','O','U') AND RIGHT (name,1) NOT IN ('A','E','I','O','U')
+-- doesnt work on live sql
+
+-- SELECT ROUND() dekho
+
+SELECT ROUND(15.193, 1) "Round" FROM DUAL;
+
+-- commit vs rollback: undo allowed in rollback
+-- see joint operations
+
+CREATE TABLE Dept(
+dept_name VARCHAR(10),
+eid NUMBER,
+budget NUMBER
+)
+
+INSERT INTO Dept VALUES('Science', 102, 10000);
+INSERT INTO Dept VALUES('Maths', 104, 20000);
+
+SELECT e1.eid AS employee_id, e1.name AS ename, d2.dept_name AS dept, d2.budget AS budget FROM Employee e1 INNER JOIN Dept d2 ON e1.eid=d2.eid;
+-- table ke saath AS kaam nhi krta...
+-- AS keyword: to create alias

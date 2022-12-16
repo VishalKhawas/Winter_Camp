@@ -1,0 +1,20 @@
+CREATE TABLE BookCategory(BookCategoryId NUMBER, BookCategoryName VARCHAR(20));
+CREATE TABLE Book(BookId NUMBER PRIMARY KEY, BookName VARCHAR(20), AuthorId NUMBER, Publisher VARCHAR(20), BranchId NUMBER);
+CREATE TABLE Student(U_Id VARCHAR(10) PRIMARY KEY, Name1 VARCHAR(20), Address VARCHAR(20), BranchId VARCHAR(20), Sem VARCHAR(5));
+CREATE TABLE BookBorrow(U_Id VARCHAR(10), BookId NUMBER, Borrow_Date DATE);
+
+select * from Student;
+
+INSERT INTO BookCategory VALUES(1, 'Development');
+INSERT INTO BookCategory VALUES(2, 'Maths');
+INSERT INTO BookCategory VALUES(4, 'DBMS');
+
+INSERT INTO Book VALUES(101, 'Book-1', 901, 'Piegon', 501);
+INSERT INTO Book VALUES(102, 'Book-2', 901, 'Penguin', 502);
+INSERT INTO Book VALUES(103, 'Book-3', 902, 'XYZ', 501);
+INSERT INTO Book VALUES(104, 'Book-4', 903, 'Piegon', 503);
+INSERT INTO Book VALUES(105, 'Book-5', 903, 'Publisher', 502);
+
+INSERT INTO Student VALUES('1234', 'ABC', 'Bokaro', '');
+
+drop table Student11;

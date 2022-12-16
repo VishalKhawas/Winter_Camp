@@ -1,0 +1,42 @@
+drop table Items;
+
+CREATE TABLE Items(item_id NUMBER, name VARCHAR(10), price NUMBER, sdate DATE);
+
+INSERT INTO Items VALUES(101, 'A', 100, to_date('19-12-2022', 'dd-mm-yyyy'));
+INSERT INTO Items VALUES(102, 'B', 200, to_date('19-10-2022', 'dd-mm-yyyy'));
+INSERT INTO Items VALUES(103, 'C', 150, to_date('19-12-2022', 'dd-mm-yyyy'));
+INSERT INTO Items VALUES(104, 'D', 120, to_date('19-10-2022', 'dd-mm-yyyy'));
+INSERT INTO Items VALUES(105, 'B', 100, to_date('19-9-2022', 'dd-mm-yyyy'));
+INSERT INTO Items VALUES(106, 'B', 150, to_date('19-11-2022', 'dd-mm-yyyy'));
+
+CREATE TABLE salesman(sales_id NUMBER, name2 VARCHAR(20), comssion NUMBER);
+
+INSERT INTO salesman VALUES (101, 'Vishal', 0);
+INSERT INTO salesman VALUES (101, 'A', 100);
+INSERT INTO salesman VALUES (103, 'B', 200);
+INSERT INTO salesman VALUES (104, 'C', 400);
+
+SELECT trunc(s.sdate, 'mon') AS sales_month, sp.name2, sum(price) AS sum1,
+rank() OVER(PARTITION BY trunc(s.sdate, 'mon') ORDER BY sum(price) desc) AS sq from Items s, salesman sp
+WHERE s.item_id = sp.sales_id
+GROUP BY trunc(s.sdate, 'mon'), sp.name2;
+
+--Q find top three entries of each month
+
+-- n tile function also known as bucket function
+SELECT sp.name2, sum(price) as sum2, ntile(3) over(order by sum(price) desc) amnt from Items s, salesman sp
+where s.item_id=sp.sales_id group by sp.name2;
+
+--lag/lead function
+--lag navigates back and lead navigates front(this year - next year)
+--lag(sum(price))
+
+select trunc(s.sdate, 'mon'), sum(price) as sum2,
+lag(sum(price), 1) over(order by trunc(s.sdate, 'mon'))
+as previous_month from Items s
+group by trunc(s.sdate, 'mon');
+
+select trunc(s.sdate, 'mon'), sum(price) as sum2,
+lead(sum(price), 1) over(order by trunc(s.sdate, 'mon'))
+as previous_month from Items s
+group by trunc(s.sdate, 'mon');
